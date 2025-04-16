@@ -1,6 +1,11 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+// Це потрібно, щоб отримати __dirname в ES-модулі
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   entry: './assets/featured-products.js',
   output: {
     filename: 'featured-products.bundle.js',

@@ -1,0 +1,59 @@
+{% comment %}
+  Featured Products Section for Shopify Dawn Theme
+  Displays products from a selected collection, excludes items already in cart
+{% endcomment %}
+
+{%- assign collection = collections[section.settings.collection] -%}
+{%- assign products_to_show = collection.products | where: 'available', true -%}
+
+<featured-product-section class="featured-products" data-section-id="{{ section.id }}" data-section-type="featured-products">
+  <div class="featured-products__container">
+    <h2 class="featured-products__title">Featured Products</h2>
+    <div class="featured-products__grid">
+      {% for product in products_to_show limit: 4 %}
+        {% comment %} Skip products already in cart {% endcomment %}
+        {% unless cart.items contains product %}
+          <div class="featured-products__item">
+            <div class="featured-products__image-wrapper">
+              <img
+                src="{{ product.featured_image | img_url: '300x300' }}"
+                alt="{{ product.title | escape }}"
+                class="featured-products__image"
+                loading="lazy"
+              >
+            </div>
+            <h3 class="featured-products__product-title">{{ product.title }}</h3>
+            <button
+              class="featured-products__button button"
+              data-product-id="{{ product.id }}"
+              data-variant-id="{{ product.variants.first.id }}"
+              data-quantity="1"
+              onclick="FeaturedProductSection.addToCart(this)"
+            >
+              Add to cart - {{ product.price | money }}
+            </button>
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+</featured-product-section>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
