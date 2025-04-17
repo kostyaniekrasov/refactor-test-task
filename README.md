@@ -24,7 +24,7 @@
 
 5. Pull the Dawn theme or create a new one:
    ```bash
-  shopify theme pull --store your-store-name.myshopify.com
+  	shopify theme pull --store your-store-name.myshopify.com
 	 ```
 
 6. Build JavaScript and CSS assets:
