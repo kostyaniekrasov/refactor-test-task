@@ -1,5 +1,7 @@
 # Shopify Featured Products Section
 
+## [DEMO](https://refactor-test-task.myshopify.com/)
+
 ## Commands to Run the Project Locally
 
 1. Clone or download the project to a local directory:
