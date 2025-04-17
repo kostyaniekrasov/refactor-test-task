@@ -1,0 +1,22 @@
+<div class="featured-products__item" data-product-id="{{product.id}}">
+  <div class="featured-products__image-wrapper">
+    <img
+      width="375px"
+      height="260px"
+      src="{{ product.featured_image | img_url: '1080x1080' }}"
+      alt="{{ product.title | escape }}"
+      class="featured-products__image"
+      loading="lazy"
+    >
+  </div>
+
+  <h3 class="featured-products__product-title">{{ product.title }}</h3>
+
+  <button
+    class="featured-products__button"
+    is="add-to-cart-button"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  >
+    Add to cart - {{ product.price | money }}
+  </button>
+</div>

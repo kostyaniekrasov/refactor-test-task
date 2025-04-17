@@ -1,43 +1,26 @@
-{%- assign collection = collections[section.settings.collection] -%}
-{%- assign products_to_show = collection.products | where: 'available', true -%}
+{%- liquid
+  assign collection = section.settings.collection | default: collections.all
+  assign products_to_show = collection.products | where: 'available', true
+  assign cart_product_ids = cart.items | map: 'product_id'
+-%}
 
 <featured-product-section
   class="featured-products"
   data-section-id="{{ section.id }}"
-  data-section-type="featured-products"
+  id="shopify-section-{{ section.id }}"
 >
   <div class="featured-products__container">
-    <h2 class="featured-products__title">Featured Products</h2>
-
+    <h2 class="featured-products__title">{{ section.settings.title | default: 'Featured Products' | escape }}</h2>
     <div class="featured-products__wrapper">
-      {% for product in products_to_show limit: 4 %}
-        {% unless cart.items contains product %}
-          <div class="featured-products__item">
-            <div class="featured-products__image-wrapper">
-              <img
-                width="375px"
-                height="260px"
-                src="{{ product.featured_image | img_url: '1080x1080' }}"
-                alt="{{ product.title | escape }}"
-                class="featured-products__image"
-                loading="lazy"
-              >
-            </div>
-
-            <h3 class="featured-products__product-title">{{ product.title }}</h3>
-
-            <button
-              class="featured-products__button"
-              data-product-id="{{ product.id }}"
-              data-variant-id="{{ product.variants.first.id }}"
-              data-quantity="1"
-              onclick="FeaturedProductSection.addToCart(this)"
-            >
-              Add to cart - {{ product.price | money }}
-            </button>
-          </div>
-        {% endunless %}
-      {% endfor %}
+      {% if products_to_show.size == 0 %}
+        <p>No available products in this collection.</p>
+      {% else %}
+        {% for product in products_to_show limit: section.settings.products_limit %}
+          {% unless cart_product_ids contains product.id %}
+            {% render 'product-card', product: product %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 </featured-product-section>
@@ -47,9 +30,24 @@
   "name": "Featured Products",
   "settings": [
     {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Featured Products"
+    },
+    {
       "type": "collection",
       "id": "collection",
       "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 4
     }
   ],
   "presets": [
